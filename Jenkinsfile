@@ -24,7 +24,7 @@ pipeline{
         }
         stage('Build and tag'){
             steps{
-                sh 'docker build -t manjukolkar007/appu-sir .'
+                sh 'docker build -t manjukolkar007/app1 .'
             }
         }
         stage('Containerisation'){
@@ -32,7 +32,7 @@ pipeline{
                 sh '''
                 docker stop c5
                 docker rm c5
-                docker run -it -d --name c5 -p 9005:8080 manjukolkar007/appu-sir /bin/bash
+                docker run -it -d --name c5 -p 9005:8080 manjukolkar007/app1 /bin/bash
                 '''
             }
         }
