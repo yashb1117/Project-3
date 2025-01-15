@@ -29,7 +29,11 @@ pipeline{
         }
         stage('Containerisation'){
             steps{
-                sh 'docker run -it -d --name c5 -p 9005:8080 manjukolkar007/appu-sir /bin/bash'
+                sh '''
+                docker stop c5
+                docker rm c5
+                docker run -it -d --name c5 -p 9005:8080 manjukolkar007/appu-sir /bin/bash
+                '''
             }
         }
         stage('Login to Docker Hub') {
