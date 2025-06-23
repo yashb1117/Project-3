@@ -24,13 +24,13 @@ pipeline{
         }
         stage('Build and tag'){
             steps{
-                sh 'docker build -t manjukolkar007/puneetrajkumar .'
+                sh 'docker build -t manjukolkar007/project-1 .'
             }
         }
         stage('Containerisation'){
             steps{
                 sh '''
-                docker run -it -d --name c7 -p 9007:8080 manjukolkar007/puneetrajkumar 
+                docker run -it -d --name c8 -p 9008:8080 manjukolkar007/project-1
                 '''
             }
         }
@@ -45,7 +45,7 @@ pipeline{
         }
          stage('Pushing image to repository'){
             steps{
-                sh 'docker push manjukolkar007/puneet-sir'
+                sh 'docker push manjukolkar007/project-1'
             }
         }
         
