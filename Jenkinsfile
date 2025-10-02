@@ -1,53 +1,50 @@
-pipeline{
+pipeline {
     agent any
-    
-    tools{
-        jdk 'java-11'
+
+    tools {
+        jdk 'java11'
         maven 'maven'
     }
-    
-    stages{
-        stage('Git-checkout'){
-            steps{
-                git branch: 'dev' , url: 'https://github.com/manjukolkar/web-application.git'
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/yashb1117/Project-3.git'
             }
         }
-        stage('Code Compile'){
-            steps{
+
+        stage('Code Compile') {
+            steps {
                 sh 'mvn compile'
             }
         }
-        stage('Code Package'){
-            steps{
+
+        stage('Code Package') {
+            steps {
                 sh 'mvn clean install'
             }
         }
-        stage('Build and tag'){
-            steps{
-                sh 'docker build -t manjukolkar007/project-1 .'
+
+        stage('Build and Tag Docker Image') {
+            steps {
+                sh 'docker build -t app2 .'
             }
         }
-        stage('Containerisation'){
-            steps{
-                sh '''
-                docker run -it -d --name c8 -p 9008:8080 manjukolkar007/project-1
-                '''
+
+        stage('Containerisation') {
+            steps {
+                sh 'docker run -it -d --name c8 -p 9008:8080 app2'
             }
         }
-        stage('Login to Docker Hub') {
-                    steps {
-                        script {
-                            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                                sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                            }
-                        }
-                    }
-        }
-         stage('Pushing image to repository'){
-            steps{
-                sh 'docker push manjukolkar007/project-1'
+
+        stage('Login to Docker Hub and Push Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerhubpass', usernameVariable: 'dockerhubuser')]) {
+                    sh 'docker login -u $dockerhubuser -p $dockerhubpass'
+                    sh 'docker tag app2 $dockerhubuser/app2:latest'
+                    sh 'docker push $dockerhubuser/app2:latest'
+                }
             }
         }
-        
     }
 }
