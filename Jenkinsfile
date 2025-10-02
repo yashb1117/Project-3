@@ -33,6 +33,7 @@ pipeline {
 
         stage('Containerisation') {
             steps {
+                 docker rm -f c8
                 sh 'docker run -it -d --name c8 -p 9008:8080 app2'
             }
         }
